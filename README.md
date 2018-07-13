@@ -1,2 +1,2 @@
 # c_exercises
-My takes on popular c exercises
+My takes on popular C exercises

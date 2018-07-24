@@ -42,7 +42,8 @@ int main(int argc, char *argv[])
     double l2;
     clock_t start, end;
     double time_delta;
-    double flops;
+    double avg_flops;
+    double total_time;
     double ops_count;
     double clocking_loop;
 
@@ -80,9 +81,10 @@ int main(int argc, char *argv[])
 
     //multiplying
     clocking_loop = 100000;
-    start = clock();
+    total_time = 0;
     for (int cl = 0; cl < clocking_loop; cl++)
     {
+        start = clock();
         for (curr_r = 0; curr_r < mtx_r; curr_r++)
         {
             result_row = 0;
@@ -96,12 +98,10 @@ int main(int argc, char *argv[])
 
         }
         end = clock();
-        time_delta = ((double)(end - start))/CLOCKS_PER_SEC;
-        ops_count = 2.0;
-        flops = (ops_count*mtx_c*mtx_r)/time_delta*clocking_loop;
+        total_time +=  ((double)(end - start))/CLOCKS_PER_SEC;
     }
-
-
+    ops_count = 2.0;
+    avg_flops = (ops_count*mtx_c*mtx_r)*clocking_loop/total_time;
 
     //calculate l2 norm
     sum_of_sq = 0;
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 
     //print out results
     printf("Multiplication result has l2 norm of %5.15g\n", l2);
-    printf("Speed of multiplication was %2.3g flops\n", flops);
+    printf("Speed of multiplication was %2.3g flops\n", avg_flops);
 
     if (f !=stdin) fclose(f);
 
